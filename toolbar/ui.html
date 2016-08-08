@@ -2,7 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <lin rel="stylesheet" href="ui.css">
+    <link rel="stylesheet" href="ui.css">
+    <base target="_parent" />
   </head>
   <body>
     <span>
@@ -10,6 +11,9 @@
       <img src="whimsy.png" class="whimsy wobbling">
       <span id="title" class="wobbling">I am feeling Unicorny...</span>
     </span>
+    <div>
+      <span id="searchTerm">search</span>, that reminds me of...
+    </div>   
     <div id="OldResults">
       <ul>
         <li id="result0">Result</li>
@@ -19,7 +23,7 @@
         <li id="result4">Result</li>
       </ul>
     </div>
-    <button id="toggle">toggle</button>
+    <button id="toggle">Close</button>
     <script src="ui.js">
     </script>
   </body>

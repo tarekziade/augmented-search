@@ -8,27 +8,41 @@ document.querySelector("#toggle").addEventListener("click", function() {
 });
 
 
-function getUrls(href) {
+function getSearchTerm(href) {
   var hashes = href.slice(href.indexOf('?') + 1).split('&');
-  console.log(hashes);
-
   for (var i = 0; i < hashes.length; i++) {
         hash = hashes[i].split('=');
-        console.log(hash);
-
-        if (hash[0] == 'urls') {
-          return hash[1].split(',');
+        if (hash[0] == 'searchTerm') {
+          return hash[1];
         }
   }
   return null;
 }
 
 
-var urls = getUrls(document.URL)
+var searchTerm = getSearchTerm(document.URL);
 
-for (var i = 0; i < urls.length; i++) {
-  console.log("result" + i);
-  var ul = document.getElementById("result" + i);
-  ul.innerHTML = urls[i];
+console.log(searchTerm);
+
+chrome.storage.local.get(function(result) {
+  console.log(result[searchTerm]);
+  var items = result[searchTerm];
+  
+  if (typeof(items) !== 'undefined') {
+    console.log("here");
+
+    for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      console.log(item);
+      var ul = document.getElementById("result" + i);
+      ul.innerHTML = '<a href="' + item.url + '">' + item.innerHTML + '</a>';
+    }
+  }
+  else {
+    console.log("what");
+  }
+});
+
+if (searchTerm) {
+  document.getElementById("searchTerm").innerHTML = searchTerm;
 }
-

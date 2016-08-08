@@ -1,8 +1,8 @@
 var toolbarUI;
 
 // Create the toolbar ui iframe and inject it in the current page
-function initToolbar(searchTerm, urls) {
-  var url = "toolbar/ui.html?urls=" + urls.join(",");
+function initToolbar(searchTerm) {
+  var url = "toolbar/ui.html?searchTerm=" + searchTerm;
   var iframe = document.createElement("iframe");
   iframe.setAttribute("id", "augmentedSearch");
   iframe.setAttribute("src", chrome.runtime.getURL(url));
@@ -15,7 +15,8 @@ function initToolbar(searchTerm, urls) {
   };
 }
 
-function toggleToolbar(toolbarUI, searchTerm, urls) {
+function toggleToolbar(toolbarUI, searchTerm) {
+  console.log("toggleToolbar");
   if (toolbarUI.visible) {
     toolbarUI.visible = false;
     toolbarUI.iframe.style["display"] = "none";
@@ -28,12 +29,13 @@ function toggleToolbar(toolbarUI, searchTerm, urls) {
 // Handle messages from the add-on background page (only in top level iframes)
 if (window.parent == window) {
   chrome.runtime.onMessage.addListener(function(msg) {
-    
+    console.log("something happen"); 
     if (msg.msg == "toggle-in-page-toolbar") {
+      
       if (toolbarUI) {
-        toggleToolbar(toolbarUI, msg.searchTerm, msg.urls);
+        toggleToolbar(toolbarUI, msg.searchTerm);
       } else {
-        toolbarUI = initToolbar(msg.searchTerm, msg.urls);
+        toolbarUI = initToolbar(msg.searchTerm);
       }
     }
   });
@@ -60,7 +62,8 @@ function notifyExtension(e) {
   if (target.tagName != "A")
     return;
   var searchTerm = getSearchTerm(document.URL);
-  chrome.runtime.sendMessage({"url": target.href, "searchTerm": searchTerm});
+  chrome.runtime.sendMessage({"url": target.href, "searchTerm": searchTerm,
+                              "innerHTML": target.innerHTML});
 }
 
 

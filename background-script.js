@@ -7,6 +7,7 @@ function notify(message) {
 
   var searchTerm = message.searchTerm;
   var url = message.url;
+  var innerHTML = message.innerHTML;
 
   if (url == "searching") {
     // we're searching
@@ -15,7 +16,7 @@ function notify(message) {
        if (typeof(result[searchTerm]) !== 'undefined' && result[searchTerm] instanceof Array) {
          console.log(result[searchTerm]);
          if (result[searchTerm].length > 0) {
-           toggleToolbar(searchTerm, result[searchTerm]);
+           toggleToolbar(searchTerm);
          }
        }
     });
@@ -23,17 +24,32 @@ function notify(message) {
   } else {
     // we clicked
     console.log("Clicked");
+    var item = {'url': url, 'innerHTML': innerHTML};
 
     chrome.storage.local.get(function(result) {
+      var items = result[searchTerm];
+      if (typeof(items) !== 'undefined' && items instanceof Array) {
+        var updated = false;
 
-      if (typeof(result[searchTerm]) !== 'undefined' && result[searchTerm] instanceof Array) {
-        if (result[searchTerm].indexOf(url) == -1) {
-          result[searchTerm].splice(0, 0, url);
-          result[searchTerm] = result[searchTerm].slice(0, 5)
-          chrome.storage.local.set(result);
+        for (var i = 0; i < items.length; i++) {
+          console.log(items[i].url);
+    
+          // update
+          if (items[i].url == url) {
+            result[searchTerm][i] = item;
+            updated = true;
+            chrome.storage.local.set(result);
+          }
         }
+
+        if (!updated) {
+           result[searchTerm].splice(0, 0, item);
+           result[searchTerm] = result[searchTerm].slice(0, 5);
+           chrome.storage.local.set(result);
+        }
+
       } else {
-        result[searchTerm] = [url];
+        result[searchTerm] = [item];
         chrome.storage.local.set(result);
       }
 
@@ -50,7 +66,7 @@ function toggleToolbar(searchTerm, urls) {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {"msg": "toggle-in-page-toolbar", 
                                          "searchTerm": searchTerm, 
-                                          "urls": urls});
+                                         });
   });
 }
 
