@@ -1,0 +1,33 @@
+{
+
+  "manifest_version": 2,
+  "name": "Augmented Search",
+  "description": "Display the last Five result for a given search",
+  "version": "1.0",
+  "homepage_url": "https://github.com/tarekziade/augmented-search",
+  "icons": {
+    "48": "icons/link-48.png"
+  },
+
+  "applications": {
+    "gecko": {
+      "id": "augmented-search@mozilla.org",
+      "strict_min_version": "46.0a1"
+    }
+  },
+
+  "permissions": ["notifications", "storage"],
+
+  "background": {
+    "scripts": ["background-script.js"]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"]
+    }
+  ],
+  
+  "default_locale": "en"
+}
