@@ -18,16 +18,19 @@
 
   "permissions": ["notifications", "storage"],
 
+  "web_accessible_resources": [
+    "toolbar/ui.html"
+  ],
+
   "background": {
     "scripts": ["background-script.js"]
   },
 
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["https://duckduckgo.com/*"],
       "js": ["content-script.js"]
     }
-  ],
+  ]
   
-  "default_locale": "en"
 }

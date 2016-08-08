@@ -8,23 +8,58 @@ function notify(message) {
   var searchTerm = message.searchTerm;
   var url = message.url;
 
-  chrome.storage.local.get(function(result) {
+  if (url == "searching") {
+    // we're searching
+    console.log("Searching");
+    chrome.storage.local.get(function(result) {
+       if (typeof(result[searchTerm]) !== 'undefined' && result[searchTerm] instanceof Array) {
+         console.log(result[searchTerm]);
+         if (result[searchTerm].length > 0) {
+           toggleToolbar(searchTerm, result[searchTerm]);
+         }
+       }
+    });
 
-    if(typeof(result[searchTerm]) !== 'undefined' && 
-       result[searchTerm] instanceof Array) {
-      if (result[searchTerm].indexOf(url) == -1) {
-        result[searchTerm].splice(0, 0, url);
-        result[searchTerm] = result[searchTerm].slice(0, 5)
+  } else {
+    // we clicked
+    console.log("Clicked");
+
+    chrome.storage.local.get(function(result) {
+
+      if (typeof(result[searchTerm]) !== 'undefined' && result[searchTerm] instanceof Array) {
+        if (result[searchTerm].indexOf(url) == -1) {
+          result[searchTerm].splice(0, 0, url);
+          result[searchTerm] = result[searchTerm].slice(0, 5)
+          chrome.storage.local.set(result);
+        }
+      } else {
+        result[searchTerm] = [url];
         chrome.storage.local.set(result);
       }
-    } else {
-      result[searchTerm] = [url];
-      chrome.storage.local.set(result);
-    }
 
-    chrome.storage.local.get(function(res) {console.log(res);});
+      chrome.storage.local.get(function(res) {console.log(res);});
 
-  });
+    });
+  }
 }
 
 chrome.runtime.onMessage.addListener(notify);
+
+// Send a message to the current tab's content script.
+function toggleToolbar(searchTerm, urls) {
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {"msg": "toggle-in-page-toolbar", 
+                                         "searchTerm": searchTerm, 
+                                          "urls": urls});
+  });
+}
+
+// Handle connections received from the add-on toolbar ui iframes.
+chrome.runtime.onConnect.addListener(function (port) {
+  if (port.sender.url == chrome.runtime.getURL("toolbar/ui.html")) {
+    // Handle port messages received from the connected toolbar ui frames.
+    port.onMessage.addListener(toggleToolbar);
+  }
+});
+
+
