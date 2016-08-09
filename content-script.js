@@ -6,8 +6,7 @@ function initToolbar(searchTerm) {
   var iframe = document.createElement("iframe");
   iframe.setAttribute("id", "augmentedSearch");
   iframe.setAttribute("src", chrome.runtime.getURL(url));
-  iframe.setAttribute("style", "position: fixed; top: 0; left: 0; z-index: 10000; width: 100%; height: 200px;");
-
+  iframe.setAttribute("style", "position: fixed; bottom: 0; left: 0; z-index: 10000; width: 100%; height: 200px;");
   document.body.appendChild(iframe);
 
   return toolbarUI = {
@@ -26,12 +25,11 @@ function toggleToolbar(toolbarUI, searchTerm) {
   }
 }
 
-// Handle messages from the add-on background page (only in top level iframes)
 if (window.parent == window) {
   chrome.runtime.onMessage.addListener(function(msg) {
-    console.log("something happen"); 
+    console.log("something happen");
     if (msg.msg == "toggle-in-page-toolbar") {
-      
+
       if (toolbarUI) {
         toggleToolbar(toolbarUI, msg.searchTerm);
       } else {
@@ -40,6 +38,7 @@ if (window.parent == window) {
     }
   });
 }
+
 
 /* extract the search term for DuckDuckGo */
 function getSearchTerm(href) {
