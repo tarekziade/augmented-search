@@ -15,7 +15,12 @@ body {
 
 #title {
   font-weight: bold;
-  font-size: 1em;
+  font-size: 1.5em;
+  color: black;
+}
+
+#searchTerm {
+  color: #de5833;
 }
 
 .whimsy {
@@ -30,22 +35,12 @@ body {
   right: 4px;
   position: absolute;
   margin: 0 1em;
-  text-decoration: underline;
+  text-decoration: none;
   border-radius: 1em;
   background: transparent linear-gradient(0deg, rgb(255, 162, 0), rgba(189, 122, 6, 0.66));
 }
 
 /* Annoying animation. */
-
-@keyframes wobbling {
-  50% {
-    transform: translateY(-13px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
-}
 
 .wobbling {
   display: inline-block;
@@ -53,10 +48,14 @@ body {
   transform: translateZ(0);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0);
   backface-visibility: hidden;
+}
 
-  animation-name: wobbling;
-  animation-duration: 1.25s;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-fill-mode: both;
+ul {
+  list-style-type: none;
+}
+
+a, a:visited {
+  color: black;
+  text-decoration: none;
+
 }
