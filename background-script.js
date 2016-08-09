@@ -9,6 +9,12 @@ function notify(message) {
   var url = message.url;
   var innerHTML = message.innerHTML;
 
+  
+  if (url == 'close-toolbar') {
+    toggleToolbar(searchTerm); 
+    return;
+  }
+  
   if (url == "searching") {
     // we're searching
     console.log("Searching");
@@ -62,7 +68,7 @@ function notify(message) {
 chrome.runtime.onMessage.addListener(notify);
 
 // Send a message to the current tab's content script.
-function toggleToolbar(searchTerm, urls) {
+function toggleToolbar(searchTerm) {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, {"msg": "toggle-in-page-toolbar", 
                                          "searchTerm": searchTerm, 
