@@ -54,8 +54,30 @@ ul {
   list-style-type: none;
 }
 
+li {
+  margin: 10px;
+}
+
 a, a:visited {
   color: black;
   text-decoration: none;
-
 }
+
+.button {
+  background-color: #de5833;
+  width: 20px;
+  height: 20px;
+  font-weight: bold;
+  color: white;
+  border: 1px solid #900;
+  margin-right: 5px;
+  text-transform: uppercase;
+  padding: auto;
+}
+
+.button:hover {
+  background-color: white;
+  color: #de5833;
+}
+
+

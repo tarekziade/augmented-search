@@ -10,6 +10,25 @@ document.querySelector("#toggle").addEventListener("click", function() {
 });
 
 
+document.querySelector("#b0").addEventListener("click", function() {
+    removeItem(0);
+});
+document.querySelector("#b1").addEventListener("click", function() {
+    removeItem(1);
+});
+document.querySelector("#b2").addEventListener("click", function() {
+    removeItem(2);
+});
+
+document.querySelector("#b3").addEventListener("click", function() {
+    removeItem(3);
+});
+document.querySelector("#b4").addEventListener("click", function() {
+    removeItem(4);
+});
+
+
+
 function getSearchTerm(href) {
   var hashes = href.slice(href.indexOf('?') + 1).split('&');
   for (var i = 0; i < hashes.length; i++) {
@@ -29,7 +48,7 @@ console.log(searchTerm);
 chrome.storage.local.get(function(result) {
   console.log(result[searchTerm]);
   var items = result[searchTerm];
-  
+
   if (typeof(items) !== 'undefined') {
     console.log("here");
 
@@ -38,6 +57,7 @@ chrome.storage.local.get(function(result) {
       console.log(item);
       var ul = document.getElementById("result" + i);
       ul.innerHTML = '<a href="' + item.url + '">' + item.innerHTML + '</a>';
+      document.getElementById("li" + i).style.display = "block";
     }
   }
   else {
@@ -48,3 +68,21 @@ chrome.storage.local.get(function(result) {
 if (searchTerm) {
   document.getElementById("searchTerm").innerHTML = searchTerm;
 }
+
+
+function removeItem(number) {
+  chrome.storage.local.get(function(result) {
+    var items = result[searchTerm];
+    for (var i = 0; i < items.length; i++) {
+      if (i == number) {
+         console.log(items);
+         items.splice(i, 1);
+         chrome.storage.local.set(result);
+         document.location.reload();
+         return;
+      }
+    }
+  });
+}
+
+

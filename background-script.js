@@ -39,7 +39,6 @@ function notify(message) {
 
         for (var i = 0; i < items.length; i++) {
           console.log(items[i].url);
-    
           // update
           if (items[i].url == url) {
             result[searchTerm][i] = item;
@@ -52,7 +51,8 @@ function notify(message) {
            result[searchTerm].splice(0, 0, item);
            result[searchTerm] = result[searchTerm].slice(0, 5);
            chrome.storage.local.set(result);
-        }
+        } 
+
 
       } else {
         result[searchTerm] = [item];
